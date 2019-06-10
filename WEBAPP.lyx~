@@ -1605,6 +1605,29 @@ are quali URL siano disponibili).
 \end_inset
 
 Il file selezionato viene elaborato ed inviato come risposta alla richiesta
+ e il controllore può specificare, tra i propri parametri, un riferimento
+ ad un oggetto di tipo Model (consiste sotanzialmente in una mappa chiave-valore
+).
+ Un controllore può ricevere informazioni in tre modi: tramite i segmenti
+ di testo che formano la URL (annotare con @PathVariable), tramite i parametri
+ posti nella queryString (parametri del metodo del controllore, usando annotazio
+ne @RequestParam<paramName>) oppure tramite POST e PUT (passati sotto forma
+ di oggetto Java a condizione che sia dotato di metodi get/set, e può venire
+ indicato come parametro in ingresso al metodo del controllore e ci pensa
+ Spring a istanziare).
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+In molte situazioni è necessario verificare che i dati rispettino un insieme
+ di vincoli formali, e Spring offre un meccanismo generale: gli attributi
+ dell'oggetto DTO possono essere etichettati con annotazioni tipo @NotNull
+ @Min<val> @Valid.
+ Quest'ultimo aggiunge un parametro BindingResult che verifica gli errori
+ che possono essere visti tramite hasErrors().
 \end_layout
 
 \end_body
