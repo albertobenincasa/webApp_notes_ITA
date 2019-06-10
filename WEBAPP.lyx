@@ -1227,6 +1227,407 @@ Per ogni tipo di richiesta viene definita una URL opportuna: qui viene mappato
  servlet) e per ogni vista viene preparata una opportuna implementazione.
  Per ogni URL supportata, occorre definire un controllore con i relativi
  metodi.
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Part*
+SPRING FRAMEWORK
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Il cuore del framework Spring è basato su Inversion of Control, Dependency
+ Injection e programmazione orientata agli oggetti: si fa largo utilizzo
+ del concetto di POJO-oriented development, ovvero non obbliga ad organizzare
+ le classi in una specifica gerarchia di ereditarietà, nè ad implementare
+ specifiche interfacce.
+ Tutte le applicazioni ad oggetti sono basate su un insieme di classi che
+ interagiscono secondo una qualche logica, ciascun oggetto è responsabile
+ di ottenere i riferimenti degli oggetti con cui deve interagire, detti
+ dipendenze.
+ Questo pattern porta alla realizzazione di applicazioni strettamente accoppiate
+: se una classe dipende da una seconda non può essere compilata, testata
+ e deployata in assenza della seconda, è ciò rende il sitema fragile e difficile
+ da mantenere! Occorre rendere indipendenti le due classi, eliminando i
+ riferimenti in compilazione ma facendo in modo di non perdere il legame
+ in fase di esecuzione.
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection*
+INVERSION OF CONTROL
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Si elimina la dipendenza diretta nel codice sorgente introducendo un'interfaccia
+ che ne astragga il comportamento.
+ Essa separa due tipi di responsabilità: COSA deve essere fatto e QUANDO
+ deve essere fatto; in generale, si realizza questo tipo di inversione passando
+ da una modalità a chiamata diretta su un oggetto a propria scelta ad una
+ chiamata indiretta su un oggetto fornito da altri.
+ Questo sposta il problema su chi deve instanziare la prima classe, ossia
+ occorre fornire un parametro opportuno al costruttore.
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection*
+DEPENDENCY INJECTION
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Pattern di programmazione che realizza l'accoppiamento tra gli oggetti in
+ fase di esecuzione invece che in fase di compilazione: si affida ad un
+ componente esterno la responsabilità di creare un grafo di dipendenze da
+ oggetti: essi vengono tra loro collegati sulla base di un insieme di elementi
+ di natura dichiarativa (nome, tipo, annotazioni), da una terza parte (framework
+) appositamente delegata.
+\begin_inset Newline newline
+\end_inset
+
+In questo modo, tutte le dipendenze vengono create e salvate in un contenitore
+ e successivamente iniettate nel programma principale sotto forma di proprietà
+ degli oggetti: approccio contrario alla normale creazione di applicazioni!
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Ci sono diversi modi con cui i vari componenti possono essere legati tra
+ loro in Spring, eventualmente mischiandoli tra loro:
+\end_layout
+
+\begin_layout Itemize
+Configurazione esplicita tramite un file XML
+\end_layout
+
+\begin_layout Itemize
+Configurazione esplicita tramite l'utilizzo di classi Java
+\end_layout
+
+\begin_layout Itemize
+Scoperta implicita dei bean e autowiring automatico
+\end_layout
+
+\begin_layout Subsection*
+ASPECT ORIENTED PROGRAMMING
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Paradigma di programmazione in grado di descrivere comportamenti trasversali
+ all'applicazione, separandoli dal dominio applicativo.
+ Si definisce cross-cutting concern una qualunque funzionalità che riguarda
+ più punti di un'applicazione: esse possono essere modularizzate in speciali
+ classi, chiamate aspect.
+ Portano due benefici: la logica relativa ai comportamenti trasversali non
+ è ripetuta e le classi a cui applicare gli aspeetti sono più pulite poichè
+ contengono solo le loro funzionalità primarie.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Il lavoro compiuto da un aspect è detto advice, e Spring supporta 5 advice:
+ before, after, after-returning, after-throwing, around (before+after).
+ Da un punto di vista pratico, nella programmazione ad aspetti le classi
+ base scritte dal programmatore sono modificate in fase di caricamento.
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection*
+CONTENITORE
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In un'applicazione Spring, gli oggetti sono creati e legati tra loro da
+ un container che crea oggetti, li collega e ne gestisce il ciclo di vita.
+ Vi possono essere diverse implementazioni, categorizzate in due tipologie:
+ BeanFactory (scenari semplici) e ApplicationContext (scenari di complessità
+ arbitraria).
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Il primo (XMLBeanFactory) è un semplice contenitore fornito da Spring, che
+ crea ed istanzia i bean insieme a tutte le configurazioni di dipendenza.
+ Quando un bean viene richiesto, il client ne ottiene un'istanza completamente
+ funzionale.
+ Utilizzato solitamente per applicazioni mobili o nei contesti in cui le
+ risorse sono limitate.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Il secondo (ApplicationContext) ne è un'estensione che, alla gestione del
+ ciclo di vita dei bean, aggiunge diversi supporti, tra cui una versione
+ estesa del pattern 
+\begin_inset Quotes eld
+\end_inset
+
+observer
+\begin_inset Quotes erd
+\end_inset
+
+ con il supporto della tecnica publih/subscribe.
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection*
+BEAN
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Spring identifica come bean tutte le classi che sono etichettate come @Component.
+ Se una classe è etichettata come @Configuration, tutti i suoi metodi etichettat
+i con @Bean vengono invocati.
+ In una tradizionale applicazione Java, il ciclo di vita degli oggetti è
+ semplice: viene usata la keyword 
+\begin_inset Quotes eld
+\end_inset
+
+new
+\begin_inset Quotes erd
+\end_inset
+
+ per istanziare l'oggetto e lo rende pronto per essere utilizzato, per poi
+ divenire candidato per la garbage collection.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Il ciclo di vita dei Bean è più complicato:
+\end_layout
+
+\begin_layout Itemize
+Il contenitore carica le definizioni dei bean.
+ Quando gli viene chiesto un bean specifico lo istanzia
+\end_layout
+
+\begin_layout Itemize
+Il bean viene popolato con le proprietà dichiarate nelle definizioni.
+ Se una proprietà ha un riferimento ad un altro bean, questo viene creato
+ e inizializzato prima di procedere con la creazione del bean che lo referenzia
+\end_layout
+
+\begin_layout Itemize
+Se il bean implementa determinate interfacce, vengono chiamati i metodi
+ appropriati.
+\end_layout
+
+\begin_layout Itemize
+Se viene indicato un BeanPostProcessor, il framework ne invoca il metodo
+ di pre-inizializzazione
+\end_layout
+
+\begin_layout Itemize
+Se l'oggetto creato implementa l'interfaccia InitializingBean, il framework
+ invoca il metodo afterPropertiesSet()
+\end_layout
+
+\begin_layout Itemize
+Se specificato tramite l'annotazione @Bean(initMethod="..."), viene invocato
+ il metodo indicato
+\end_layout
+
+\begin_layout Itemize
+Se viene indicato un BeanPostProcessor, il framework ne invoca il metodo
+ di post-inizializzazione
+\end_layout
+
+\begin_layout Itemize
+Al termine del suo ciclo di vita, se implementa DisposableBean viene invocato
+ il metodo destroy().
+ Se è stato specificato un distruttore, questo viene eseguito
+\end_layout
+
+\begin_layout Standard
+All'atto della definizione, è possibile indicarne la visibilità con @Scope(...)
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection*
+AUTOWIRING
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+L'autowiring è un modo per lasciare a Spring il compito di risolvere automaticam
+ente le dipendenze tra i bean.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Autowire per costruttore: la presenza dell'annotazione @Autowired su un
+ costruttore con parametri abilita l'istanziazione del bean (per ciascun
+ parametro il contenitore cerca un bean del tipo richiesto e lo inietta
+ nel costruttore).
+ Se sono presenti più bean il cui tipo corrisponde a un dato argomento del
+ costruttore, viene generata un'eccezione: per evitare ambiguità si può
+ segnalare che un dato bean non è un candidato primario per l'iniezione
+ utilizzando primary=false.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Autowire per tipo: l'annotazione @Autowired può essere applicata anche a
+ singoli campi di un oggetto o ai suoi metodi setter.
+ In questo caso, il contenitore cerca, per ogni campo/metodo, un bean il
+ cui tipo coincide con il tipo richiesto: se è un array o una collezione,
+ esso inietta tutti i bean con il tipo degli elementi degli array o della
+ collezione.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Autowire per nome: usando l'annotazione @Resource(name=
+\begin_inset Quotes erd
+\end_inset
+
+...
+\begin_inset Quotes erd
+\end_inset
+
+) è possibile indicare che deve essere iniettato uno specifico bean sulla
+ base del nome con cui è noto al contenitore.
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection*
+APPLICATION.PROPERTIES
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Ogni progetto Spring Boot ha associato un file di configurazione application.prop
+erties il cui caricamento è implicito.
+ Si possono aggiungere righe nella forma <chiave>=<valore> che dipendono
+ dai moduli aggiunti al progetto.
+ I valori fissati all'interno del file delle proprietà possono essere assegnati
+ a campi presenti all'interno della classe principale o in qualunque altra
+ classe etichettata con l'annotazione @Component
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection*
+VISUALIZZAZIONE PAGINE HTML
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Una classe annotata con @Controller viene automaticamente istanziata in
+ quanto @Component (Spring cerca tra i suoi metodi @RequestMapping per identific
+are quali URL siano disponibili).
+ Ogni volta che viene ricevuta una richiesta per il verbo HTTP e URL associati
+ ad un dato metodo, questo viene invocato ed il suo valore di ritorno viene
+ utilizzato per selezionare una vista opportuna che verrà restituita come
+ risposta.
+ La trasformazione di tale valore in una vista è affidata ad un apposito
+ bean, il viewResolver e se tale valore è una stringa, il suo nome indica
+ il nome della vista.
+\begin_inset Newline newline
+\end_inset
+
+Il file selezionato viene elaborato ed inviato come risposta alla richiesta
+ e il controllore può specificare, tra i propri parametri, un riferimento
+ ad un oggetto di tipo Model (consiste sotanzialmente in una mappa chiave-valore
+).
+ Un controllore può ricevere informazioni in tre modi: tramite i segmenti
+ di testo che formano la URL (annotare con @PathVariable), tramite i parametri
+ posti nella queryString (parametri del metodo del controllore, usando annotazio
+ne @RequestParam<paramName>) oppure tramite POST e PUT (passati sotto forma
+ di oggetto Java a condizione che sia dotato di metodi get/set, e può venire
+ indicato come parametro in ingresso al metodo del controllore e ci pensa
+ Spring a istanziare).
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+In molte situazioni è necessario verificare che i dati rispettino un insieme
+ di vincoli formali, e Spring offre un meccanismo generale: gli attributi
+ dell'oggetto DTO possono essere etichettati con annotazioni tipo @NotNull
+ @Min<val> @Valid.
+ Quest'ultimo aggiunge un parametro BindingResult che verifica gli errori
+ che possono essere visti tramite hasErrors().
 \end_layout
 
 \end_body
