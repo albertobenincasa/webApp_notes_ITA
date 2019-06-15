@@ -1634,6 +1634,27 @@ In molte situazioni è necessario verificare che i dati rispettino un insieme
  @Min<val> @Valid.
  Quest'ultimo aggiunge un parametro BindingResult che verifica gli errori
  che possono essere visti tramite hasErrors().
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection*
+SPRING SERVICES
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Le funzionalità offerte dall'applicazione sono normalmente formulate sotto
+ forma di API: i metodi di tale interfaccia costituiscono la logica mentre
+ i data passati/restituiti descrivono le astrazioni del dominio applicativo.
+ A partire dalla definizione di servizio, è possibile formulare un insieme
+ di test e un'implementazione fittizia (mock) che permette di suddividere
+ il lavoro tra gruppi di sviluppatori diversi.
 \end_layout
 
 \end_body
