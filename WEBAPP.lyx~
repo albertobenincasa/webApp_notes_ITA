@@ -1655,6 +1655,232 @@ Le funzionalità offerte dall'applicazione sono normalmente formulate sotto
  A partire dalla definizione di servizio, è possibile formulare un insieme
  di test e un'implementazione fittizia (mock) che permette di suddividere
  il lavoro tra gruppi di sviluppatori diversi.
+\begin_inset Newline newline
+\end_inset
+
+Il meccanismo di inserimento delle dipendenze offre il substrato per implementar
+e facilmente la logica applicativa: appositi oggetti etichettati con @Service
+ offrono le funzionalità effettive del servizio che si intende erogare.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Il ViewModel è un oggetto che veicola i dati da mandare alla vista (JSON),
+ tipicamente contiene i valori inseriti dall'utente nei form.
+\begin_inset Newline newline
+\end_inset
+
+I DTO (Data Transfer Object) modella le informazioni che l'interfaccia del
+ servizio offre e/o consuma: il controller si occupa di trasformare le informazi
+oni ricevute in ingresso in uno o più DTO necessari per il servizio e si
+ occupa inoltre di trasformare i dati restituiti da questo in un ViewModel
+ adatto.
+\begin_inset Newline newline
+\end_inset
+
+Le Entity modellano i dati così come vengono tenuti nel DB, permettendo
+ di disaccoppiare lo strato di servizio da quello di persistenza e aggiungere
+ informazioni necessarie alla indicizzazione e alle query.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Per accedere ai dati si può non coinvolgere il framework Spring (totale
+ flessibilità, ma nessun servizio offerto dalla piattaforma!) oppure appoggiarsi
+ alle funzionalità del framework (sforzo leggermente maggiore nel configurare
+ l'ambiente ma ben ripagato!)
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection*
+REPOSITORY
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Nome usato nella terminologia Spring per definire una classe DAO, che offre
+ metodi per eseguire operazioni di accesso ad una singola tabella della
+ base dati sottostante, e si definisce come Repository<T, Id>.
+ 
+\begin_inset Newline newline
+\end_inset
+
+T rappresenta la classe che descrive il dato mentre Id è il tipo di chiave
+ primaria degli oggetti T (deve essere serializzabile e in T deve esserci
+ un campo annotato con @Id ).
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+JDBC
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Java Data Base Connectivity: permette l'accesso a database relazionali,
+ con un basso livello di astrazione (il programmatore si deve occupare di
+ quasi tutti i dettagli).
+\begin_inset Newline newline
+\end_inset
+
+I driver JDBC rappresentano il punto di congiunzione tra le due librerie
+ e il DBMS: esse vengono istanziate indirettamente attraverso la classe
+ factory DriverManager.
+ Il DB è rappresentato da una URL e per connettersi bisogna usare getConnection(
+DbURL, User, Psw).
+ Il formato è solitamente del tipo jdbc:subprotocol:source.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Per eseguire un'interrogazione, bisogna effettuare cinque passi fondamentali:
+\end_layout
+
+\begin_layout Enumerate
+Registrazione del driver (una sola volta)
+\end_layout
+
+\begin_layout Enumerate
+Connessione al database
+\end_layout
+
+\begin_layout Enumerate
+Invio dell'interrogazione
+\end_layout
+
+\begin_layout Enumerate
+Lettura dei risultati
+\end_layout
+
+\begin_layout Enumerate
+Rilascio delle risorse
+\end_layout
+
+\begin_layout Standard
+L'interfaccia per inviare i comandi sotto forma di stringhe è chiamata Statement
+, che ha come metodi quelli di eseguire delle interrogazioni (executeQuery,
+ executeUpdate) e rilasciare le risorse utilizzate (close()).
+\begin_inset Newline newline
+\end_inset
+
+Come oggetto risultato si ha il ResultSet, che organizza i dati in forma
+ tabulare (ad ogni riga corrisponde un record restituito, in modo tale da
+ poter richiamare le righe ad una ad una, tramite un cursore).
+ Si accede ai dati della riga puntata dal cursore tramite i metodi getXXXX(field
+Name) o getXXXX(columnIndex).
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+E' possibile associare una classe ad ogni tabella presente nella base dati:
+ i suoi attributi quind corrispondono alle colonne della tabella.
+ Per ogni classe del dominio si definisce anche una classe DAO (Data Access
+ Object) i cui metodi offrono le funzionalità necessarie a creare, reperire,
+ modificare ed eliminare singole righe nella tabella (CRUD).
+ Per default, eventuali cambiamenti vengono automaticamente confermati dopo
+ l'esecuzione di ogni istruzione SQL e per disabilitare questo comportamento
+ (per raggruppare più istruzioni in una transazione oppure gestire la concorrenz
+a) si utilizza il metodo setAutoCommit(false).
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+HIBERNATE E JPA
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+L'approccio ad oggetti si presta molto bene a rappresentare sistemi software
+ complessi ma manca un meccanismo generalizzato per rendere persistenti
+ le informazioni.
+ Per superare il disadattamento di impedenza si può utilizzare un ORM (Object-Re
+lational Mapping), ossia uno strato software che converte i tipi di dato
+ da un formato ad oggetti ad uno relazionale e viceversa.
+ Ad ogni riga del DB si associa un oggetto di classe opportuna (introducendo
+ un meccanismo per cui oggetto e riga si mantengono sincronizzati, almeno
+ in momenti specifici).
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Un ORM è un approccio concettuale alla modellazione, interrogazione e trasformaz
+ione dei dati che rende trasparenti le operazioni si conversione e rappresentazi
+one a basso livello delle informazioni all'interno della base dati.
+ Internamente genera le istruzioni necessarie per accedere alla base dati
+ garantendo:
+\end_layout
+
+\begin_layout Itemize
+Produttività: viene eliminata la scrittura di codice altamente ripetitivo
+\end_layout
+
+\begin_layout Itemize
+Manutenibilità: meno codice è più facile da mantenere
+\end_layout
+
+\begin_layout Itemize
+Prestazioni: il caricamento delle entità collegate da una relazione avviene
+ solo se richiesto
+\end_layout
+
+\begin_layout Itemize
+Astrazione: abbiamo indipendenza dal produttore del DBMS
+\end_layout
+
+\begin_layout Standard
+Che limiti abbiamo? In caso di cancellazioni massive o esecuzione di join
+ con un elevato numero di elementi ci possono essere problemi di prestazioni
+ e il suo utilizzo massivo può condurre a basi dati mal progettate.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Un ORM per Java è Hibernate, adatto sia per applicazioni stand-alone che
+ per applicazioni web.
+ Ad ogni entità presente nel modello logico è associata una classe Java
+ (dotata sia di getter/setter che di un ID).
+ Le entità sono associate a tabelle relazionali mediante un file XML oppure
+ mediante annotazioni.
+ Nel primo caso la sintassi non è semplice facile da leggere o da scrivere,
+ e inoltre bisogna mantenere la sincronizzazione tra file XML e classe Java.
+ Nel secondo caso ogni classe che definisce un'entità viene preceduta dall'annot
+azione @Entity
 \end_layout
 
 \end_body
