@@ -2006,6 +2006,223 @@ JPA (Java Persistence Annotation) è un'interfaccia standard per rendere
  persistenti oggetti tramite ORM e viene definita a partire dal modello
  hibernate (si configura da META-INF/persistence.xml al posto di hibernate.cfg.xml)
 , ma in Spring Boot il framework provvede a simularne l'esistenza.
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+REST
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+L'evoluzione di internet impone la realizzazione di sistemi distribuiti
+ scalabili:
+\end_layout
+
+\begin_layout Itemize
+Eterogeneità: capacità di fare interoperare dispositivi diversi in termini
+ di risorse hardware, SO, linguaggi di programmazione ecc..
+\end_layout
+
+\begin_layout Itemize
+Scalabilità: capacità di garantire il mantenimento di livelli di servizio
+ al crescere del numero di utenti/transazioni
+\end_layout
+
+\begin_layout Itemize
+Evoluzione: proprietà di un'architettura di non introdurre vincoli strutturali
+ che impediscono la manutenzione evolutiva di un servizio
+\end_layout
+
+\begin_layout Itemize
+Resilienza: capactià di un sistema di mantenere i propri livelli di servizio
+ anche a fronte di malfunzionamenti locali
+\end_layout
+
+\begin_layout Itemize
+Efficienza: misura del rapporto tra le risorse impegnate per offrire un
+ servizio e il valore del risultato prodotto
+\end_layout
+
+\begin_layout Itemize
+Prestazioni: valutazione assoluta del tempo/risorse necessarie per erogare
+ un servizio
+\end_layout
+
+\begin_layout Standard
+REST (Representational State Transfer) è uno stile con il quale realizzare
+ architetture distribuite.
+ Client-Server privo di stati (implementazioni semplici e scalabili).
+ Più servizi ospitati su un server: ognuno gestisce un insieme di 
+\begin_inset Quotes eld
+\end_inset
+
+informazioni
+\begin_inset Quotes erd
+\end_inset
+
+ che hanno un nome univoco su scala globale (URI) e supporta operazioni
+ elementari di tipo CRUD.
+ Le informazioni associate ad una URL possono essere relative a singole
+ voci, collezioni di voci o risultati di computazioni funzionali.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Poichè ogni entità ha un nome univoco, è possibile legarle insieme specificando
+ il nome della relazione.
+ Il protocollo HTTP costituisce un ambiente naturale nel quale le richieste
+ di tipo CRUD possono essere mappate sulle caratteristiche del trasporto
+ (ogni richiesta consiste di un'azione e di una URL).
+\begin_inset Newline newline
+\end_inset
+
+Ogni elemento può essere rappresentato in formati alternativi (JSON, XML,
+ CSV...) e HTTP dispone di un meccanismo nativo per negoziare il formato di
+ dati scambiati.
+ Il grado di adesione di un dato progetto ai principi generali dell'architettura
+ REST può essere catalogato sulla base del modello Richardson:
+\end_layout
+
+\begin_layout Itemize
+LIVELLO 0: HTTP viene usato come protocollo di trasporto, tutte le richieste
+ sono indirizzate ad una singola URL e si usa prevalentemente il metodo
+ POST.
+\end_layout
+
+\begin_layout Itemize
+LIVELLO 1: ogni entità gestita dal sistema dispone di una propria URL e
+ si usa prevalentemente il metodo POST
+\end_layout
+
+\begin_layout Itemize
+LIVELLO 2: i comandi da eseguire vengono mappati sui metodi HTTP e gli esiti
+ dell'operazione sono espressi tramite i codici di stato
+\end_layout
+
+\begin_layout Itemize
+LIVELLO 3: Per ogni oggetto trasferito, il server include una serie di collegame
+nti (URI) che indicano quali azioni possano essere compiute sull'oggetto
+ stesso
+\end_layout
+
+\begin_layout Standard
+L'uso di URL differenti (livello 1) affronta il problema della gestione
+ della complessità attraverso il paradigma 
+\begin_inset Quotes eld
+\end_inset
+
+divide et impera
+\begin_inset Quotes erd
+\end_inset
+
+.
+ L'uso dei metodi HTTP e dei codici di stato associati (livello 2) offre
+ un meccanismo di standardizzazione, eliminando variazioni superficiali
+ che sono fonte di inutile complessità.
+ L'uso di collegamenti ipertestuali (livello 3) permette la scoperta dinamica
+ dei servizi, rendendo le interfacce più auto-documentanti e aprendo la
+ strada alla realizzazione di microservizi.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Quando l'architettura di un'applicazione distribuita è basata su un insieme
+ di componenti lato server indipendenti tra loro, si parla di microservizi.
+ Ogni componente viene eseguito nel proprio processo/container/macchina
+ e coopera con gli altri utilizzando protocolli di rete.
+ Essi possono quindi essere deployati indipendentemente l'uno dall'altro
+ facilitando la scalabilità e la manutenibilità del sistema.
+ I benefici di utilizzare questo tipo di servizi sono evidenti, ma bisogna
+ tenere conto che in un ambiente distribuito le interazioni sono asincrone
+ e possono fallire, dando origine a pattern di programmazione più elaborati
+ (con debugging altrettanto complesso); inoltre, il lavoro dei sistemisti
+ cresce, dovendo mantenere un gruppo di processi che possono richiedere
+ manutenzione e riavii su base regolare.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Tra i fondamenti del modello REST c'è l'assenza di stato: ogni richiesta
+ da un client ad un server, quindi, deve contenere tutte le informazioni
+ necessarie per comprendere la richiesta e non deve basarsi su informazioni
+ di contesto memorizzate sul server.
+ Ogni oggetto trasferito porta con sè il proprio stato, e non sono perciò
+ legati ad una sessione, avendo nell'oggetto tutto quanto necessario per
+ operare su di esso: ciò abilità la scalabilità orizzontale.
+ Come si gestisce allora l'identità del client?
+\end_layout
+
+\begin_layout Itemize
+Basic Authentication: header di tipo Authorization il cui valore inizia
+ con basic ed è seguito da una codifica reversibile della password
+\end_layout
+
+\begin_layout Itemize
+HMAC: header di tipo Authorization il cui valore inizia con hmac e contiene
+ un riassunto del metodo HTTP, della URL, della data/ora corrente e, se
+ presente, del corpo della richiesta
+\end_layout
+
+\begin_layout Itemize
+OAUTH2: header di tipo Authorization il cui valore inizia con bearer seguita
+ da un token autorizzativo univoco ottenuto dal server
+\end_layout
+
+\begin_layout Standard
+In Spring, si ha l'annotazione @RestController: tutti i metodi definiti
+ in una classe con essa possono mettere a disposizione un endpoint del servizio:
+ per effettuare il passaggio dei parametri nel corpo della richiesta si
+ utilizza @RequestBody.
+ Con @PathVariable è possibile inserire porzioni di URL come parametri del
+ metodo.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Spring offre due metodi per negoziare il contenuto: Content Negotiation
+ in cui è compito del programmatore fornire diversi ViewResolver in funzione
+ dei tipi di richiesta che si vuole servire oppure Message Conversion, per
+ cui non c'è necessità che il Dispatcher Servlet gestisca il passaggio da
+ model a view e viceversa (il Dispatcher Servlet considera l'Accept Header
+ della richiesta e cerca il MessageConverter adeguato).
+ 
+\begin_inset Newline newline
+\end_inset
+
+Con il primo metodo, non bisogna modificare il codice del controller mentre
+ il secondo è il modo più diretto e conveniente quando si sviluppa esclusivament
+e REST.
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+SPRING SECURITY
+\begin_inset space ~
+\end_inset
+
+
 \end_layout
 
 \end_body

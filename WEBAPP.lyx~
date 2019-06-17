@@ -1880,7 +1880,132 @@ Un ORM per Java è Hibernate, adatto sia per applicazioni stand-alone che
  Nel primo caso la sintassi non è semplice facile da leggere o da scrivere,
  e inoltre bisogna mantenere la sincronizzazione tra file XML e classe Java.
  Nel secondo caso ogni classe che definisce un'entità viene preceduta dall'annot
-azione @Entity
+azione @Entity e l'attributo chiave è preceduto da @Id; se il nome di un
+ attributo non coincide con il nome della corrispettiva colonna si può usare
+ @Column(name=
+\begin_inset Quotes erd
+\end_inset
+
+<nome>
+\begin_inset Quotes erd
+\end_inset
+
+).
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Hibernate permette che una chiave primaria semplice abbia un tipo primitivo:
+ se si intendono usare chiavi assegnate dal DBMS, è bene non usarli, ma
+ indicare che è obbligatoria e non può essere modificata in seguito.
+\begin_inset Newline newline
+\end_inset
+
+Se una chiave è annotata con @GeneratedValue, è appunto compito del DBMS
+ assegnarle un valore:
+\end_layout
+
+\begin_layout Itemize
+AUTO usa la strategia migliore in base al dialetto SQL
+\end_layout
+
+\begin_layout Itemize
+IDENTITY usa un valore numerico incrementato automaticamente legato alla
+ specifica colonna ma può impattare sulle prestazioni
+\end_layout
+
+\begin_layout Itemize
+SEQUENCE genera un valore ma non è specifico della colonna, per cui viene
+ incrementato anche se non si sta inserendo nulla
+\end_layout
+
+\begin_layout Itemize
+TABLE seleziona il nuovo valore da una apposita tabella nel DBMS
+\end_layout
+
+\begin_layout Standard
+Se il tipo della chiave non è numerico ma UUID, hibernate genera il valore
+ a livello applicativo.
+\begin_inset Newline newline
+\end_inset
+
+Per ogni proprietà presente in un oggetto è possibile definire la colonna
+ della base dati corrispondente, il tipo di SQL da adottare e i vincoli
+ su esistenza e unicità; il tipo degli attributi viene utilizzato per comprender
+ne la mappatura sulla base dati mentre i riferimenti (diretti o indiretti
+ che siano) ad altre entità sono considerati relazioni.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Se un'entità è legata ad un'altra tramite un'associazione di cardinalità
+ superiore ad uno, essa offrirà, nella classe Java, una proprietà di tipo
+ Collection, e nel file di mapping verrà riportata la corrispondente associazion
+e esprimendone la cardinalità e le eventuali tabelle di appoggio.
+ Si può navigare la relazione in entrambe le direzioni, per cui essa dev'essere
+ definita in entrmbe le entità: il discorso vale anche per l'aggiornamento/cance
+llazione, e si risolve utilizzando @cascade (PERSIST, UPDATE, REMOVE, ALL).
+\begin_inset Newline newline
+\end_inset
+
+Un'entità deve avere un costruttore pubblico, non deve essere final ed i
+ campi che devono essere resi persistenti devono essere privati, protetti
+ o accessibili solo al package (e devono essere serializzabili per poterli
+ gestire in modalità detached).
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Il file hibernate.cfg.xml fornisce le informazioni necessarie per accedere
+ ad una specifica base dati.
+ La proprietà hbm2ddl.auto indica quali azioni eseguire in inizializzazione.
+ La proprietà show_sql abilita la stampa sul log di default delle istruzioni
+ SQL che vengono eseguite da hibernate.
+\begin_inset Newline newline
+\end_inset
+
+Dal punto di vista della persistenza, un oggetto Java istanza di una classe
+ mappata, può assumere tre stati differenti:
+\end_layout
+
+\begin_layout Itemize
+Transient: appena creato da una new, e quindi senza nessun legame di persistenza
+\end_layout
+
+\begin_layout Itemize
+Persistent: eventuali modifiche vengono rese persistenti alla chiusura della
+ transazione
+\end_layout
+
+\begin_layout Itemize
+Detached: dopo la chiusura della transazione, l'oggetto perde il legame
+ con il contesto di persistenza
+\end_layout
+
+\begin_layout Standard
+Hibernate offre due metodi di accesso all'istanza: load (viene creato un
+ proxy che prova ad accedere, altrimenti EXCEPTION) oppure get (si interroga
+ subito, altrimenti NULL).
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+JPA (Java Persistence Annotation) è un'interfaccia standard per rendere
+ persistenti oggetti tramite ORM e viene definita a partire dal modello
+ hibernate (si configura da META-INF/persistence.xml al posto di hibernate.cfg.xml)
+, ma in Spring Boot il framework provvede a simularne l'esistenza.
 \end_layout
 
 \end_body
